@@ -43,7 +43,7 @@
       }
 
       .logo {
-        width: 200px;
+        height: 200px;
       }
 
       .agenda-item {
@@ -189,50 +189,54 @@
     </section>
 
     <script>
-      const items = document.getElementsByClassName("agenda-item");
+      window.addEventListener("load", () => {
+        const items = document.getElementsByClassName("agenda-item");
 
-      const getSelectedItem = () => {
-        const now = new Date();
-        const currentTime =
-          now.getHours().toString().padStart(2, "0") +
-          "h" +
-          now.getMinutes().toString().padStart(2, "0");
+        const getSelectedItem = () => {
+          const now = new Date();
+          const currentTime =
+            now.getHours().toString().padStart(2, "0") +
+            "h" +
+            now.getMinutes().toString().padStart(2, "0");
 
-        return Array.from(items).find((item) => {
-          const hourElements = item.getElementsByClassName("hour");
-          const hourElement = hourElements[0];
+          return Array.from(items).find((item) => {
+            const hourElements = item.getElementsByClassName("hour");
+            const hourElement = hourElements[0];
 
-          if (!hourElement) {
-            return false;
-          }
+            if (!hourElement) {
+              return false;
+            }
 
-          const hourInterval = hourElement.textContent;
-          const [startTime, endTime] = hourInterval
-            .replace(/[ ]/g, "")
-            .split(">");
+            const hourInterval = hourElement.textContent;
+            const [startTime, endTime] = hourInterval
+              .replace(/[ ]/g, "")
+              .split(">");
 
-          return startTime <= currentTime && currentTime < endTime;
-        });
-      };
+            return startTime <= currentTime && currentTime < endTime;
+          });
+        };
 
-      let selectedItem = getSelectedItem();
-      if (selectedItem) {
-        selectedItem.classList.add("selected");
-      }
-
-      const SECOND = 1000;
-      const MINUTE = 60 * SECOND;
-
-      setInterval(() => {
-        const selectedItemOfThisLoop = getSelectedItem();
-
-        if (selectedItem !== selectedItemOfThisLoop) {
-          selectedItem.classList.remove("selected");
-          selectedItemOfThisLoop.classList.add("selected");
+        let selectedItem = getSelectedItem();
+        if (selectedItem) {
+          selectedItem.classList.add("selected");
+          selectedItem.scrollIntoView({ behavior: "smooth" });
         }
 
-        selectedItem = selectedItemOfThisLoop;
-      }, MINUTE);
+        const SECOND = 1000;
+        const MINUTE = 60 * SECOND;
+
+        setInterval(() => {
+          const selectedItemOfThisLoop = getSelectedItem();
+
+          if (selectedItem !== selectedItemOfThisLoop) {
+            selectedItem.classList.remove("selected");
+            selectedItemOfThisLoop.classList.add("selected");
+            selectedItemOfThisLoop.scrollIntoView({ behavior: "smooth" });
+          }
+
+          selectedItem = selectedItemOfThisLoop;
+        }, MINUTE);
+      });
     </script>
   </body>
 </html>
